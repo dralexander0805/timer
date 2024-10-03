@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Timer with Countdown and Alert Sound</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .instructions {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .countdown {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">Enter a time in seconds and click anywhere on the screen to start the timer:</div>
+    <input type="number" id="timeInput" placeholder="Enter time in seconds" min="1" />
+    <div class="countdown" id="countdownDisplay"></div>
+
+    <!-- Add an audio element for the alert sound -->
+    <audio id="alertSound" src="alert.mp3" preload="auto"></audio>
+    
+    <script>
+        let countdownInterval;
+
+        document.addEventListener("click", function () {
+            const timeInput = document.getElementById("timeInput").value;
+            let timeRemaining = parseInt(timeInput);
+            
+            if (isNaN(timeRemaining) || timeRemaining <= 0) {
+                alert("Please enter a valid time in seconds.");
+                return;
+            }
+
+            // Clear any previous countdowns
+            clearInterval(countdownInterval);
+
+            // Update the countdown display immediately
+            const countdownDisplay = document.getElementById("countdownDisplay");
+            countdownDisplay.textContent = `Time remaining: ${timeRemaining} seconds`;
+
+            // Start the countdown interval
+            countdownInterval = setInterval(() => {
+                timeRemaining--;
+
+                // Update the display with the remaining time
+                countdownDisplay.textContent = `Time remaining: ${timeRemaining} seconds`;
+
+                // When time runs out, stop the countdown, show an alert, and play sound
+                if (timeRemaining <= 0) {
+                    clearInterval(countdownInterval);
+
+                    // Play the alert sound
+                    const alertSound = document.getElementById("alertSound");
+                    alertSound.play();
+
+                    // Display the alert message
+                    alert("Time's up!");
+                    countdownDisplay.textContent = ''; // Clear countdown text after completion
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
